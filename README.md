@@ -470,12 +470,12 @@ For Windows
   <tbody>
     <tr>
       <td>Muneeb Shafique</td>
-      <td>Frontend/Backend Developer</td>
+      <td>Frontend / Backend Developer / Team Lead</td>
       <td><a href="https://github.com/muneeb-shafique">@muneebshafique</a></td>
     </tr>
     <tr>
       <td>Saif ur Rehman</td>
-      <td>Backend Developer</td>
+      <td>Backend Developer / Data Engineer</td>
       <td><a href="https://github.com/SaifurRehman2911">@saifurrehman</a></td>
     </tr>
     <tr>
