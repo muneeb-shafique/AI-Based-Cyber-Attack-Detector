@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
@@ -32,9 +33,38 @@ class TrainRequest(BaseModel):
     dataset_path: str
 
 # --- Endpoints ---
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to AI-Based Cyber Attack Detector API"}
+import random
+
+# --- Endpoints ---
+@api_router.get("/metrics")
+def get_metrics():
+    """Return mock system metrics for the dashboard."""
+    return {
+        "cpu": f"{random.randint(5, 20)}%",
+        "latency": f"{random.randint(2, 5)}ms",
+        "throughput": f"{(random.random() * 0.5 + 1.2):.1f} GB/s",
+        "bar_width": f"{random.random() * 40 + 50}%"
+    }
+
+@api_router.get("/core-metrics")
+def get_core_metrics():
+    """Return mock core metrics for the Neural Core page."""
+    load = random.randint(40, 60)
+    return {
+        "load_pct": f"{load}%",
+        "entropy": f"{(random.random() * 0.05):.4f}"
+    }
+
+@api_router.get("/logs")
+def get_logs():
+    """Return a mock log stream entry."""
+    is_crit = random.random() > 0.92
+    ip = f"192.168.{random.randint(0, 255)}.{random.randint(0, 255)}"
+    return {
+        "is_critical": is_crit,
+        "ip": ip,
+        "verdict": "DROP_&_REPORT" if is_crit else "PASS_VALIDATED"
+    }
 
 @app.get("/health")
 def health_check():
@@ -78,3 +108,12 @@ def get_alerts():
     return {"alerts": []}
 
 app.include_router(api_router)
+
+from fastapi.responses import FileResponse
+
+@app.get("/")
+def serve_dashboard():
+    return FileResponse("dashboard/frontend/dashboard.html")
+
+# Mount frontend
+app.mount("/", StaticFiles(directory="dashboard/frontend", html=True), name="frontend")
