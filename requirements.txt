@@ -1,0 +1,35 @@
+# Core
+pandas
+numpy
+scipy
+
+# Network Traffic Capture & Parsing
+scapy
+dpkt
+pyshark
+
+# Machine Learning & Data Processing
+scikit-learn
+xgboost
+imbalanced-learn
+tensorflow
+keras
+
+# Dashboard & API
+Flask
+FastAPI
+uvicorn
+
+# Utilities
+python-dotenv
+joblib
+colorama
+
+# LLM, Embedding & Vectorization
+langchain
+langchain-community
+openai
+google-generativeai
+sentence-transformers
+chromadb
+faiss-cpu

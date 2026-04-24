@@ -153,6 +153,11 @@
   All communication between system components — internal APIs, database connections, and dashboard data feeds — will use secure, industry-standard protocols to ensure end-to-end integrity and confidentiality.
 </p>
 
+<h3>13. AI Security Analyst (LLM & Vectorization)</h3>
+<p>
+  Integration of Large Language Models (LLMs) and Vector Databases (e.g., ChromaDB, FAISS) to act as an automated security analyst. The system will convert threat logs into embeddings, allowing semantic search of historical attacks and providing natural language explanations, mitigation strategies, and summaries for complex zero-day anomalies.
+</p>
+
 <hr/>
 
 <!-- SYSTEM OVERVIEW -->
@@ -195,8 +200,19 @@
            ▼                                          ▼
   ┌─────────────────┐   ┌──────────────────┐   ┌────────────────────┐
   │   ALERT ENGINE  │   │  ENCRYPTED LOG   │   │  WEB DASHBOARD     │
-  │                 │   │  & DATABASE      │   │  & REPORTING       │
-  └────────┬────────┘   └──────────────────┘   └────────────────────┘
+  │                 │   │  & VECTOR DB     │   │  & AI ANALYST      │
+  └────────┬────────┘   └────────┬─────────┘   └────────┬───────────┘
+           │                     │                      │
+           │                     ▼                      │
+           │            ┌──────────────────┐            │
+           │            │  LLM EMBEDDINGS  │◄───────────┘
+           │            │  & RAG ENGINE    │
+           │            └──────────────────┘
+           ▼
+  ┌─────────────────────────────────┐
+  │   OPTIONAL: FIREWALL            │
+  │   AUTO-BLOCK ENGINE             │
+  └─────────────────────────────────┘
            │
            ▼
   ┌─────────────────────────────────┐
@@ -318,6 +334,11 @@
 ├── dashboard/                      # Web-based analytical interface
 │   ├── backend/                    # API server
 │   └── frontend/                   # UI templates and static assets
+│
+├── llm_engine/                     # LLM, Embeddings and Vector DB logic
+│   ├── ai_analyst.py               # Generates natural language threat summaries
+│   ├── vector_store.py             # ChromaDB/FAISS operations
+│   └── rag_pipeline.py             # Retrieval-Augmented Generation for historical threats
 │
 ├── data/                           # Datasets (not committed to repo)
 │   └── README.md                   # Dataset download and setup instructions
@@ -443,11 +464,16 @@ For Windows
     </tr>
     <tr>
       <td><strong>Phase 6</strong></td>
+      <td>Integrate LLM AI Analyst and Vector Database for semantic threat search</td>
+      <td>📅 Planned</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 7</strong></td>
       <td>Optional firewall auto-block integration</td>
       <td>💡 Stretch Goal</td>
     </tr>
     <tr>
-      <td><strong>Phase 6</strong></td>
+      <td><strong>Phase 7</strong></td>
       <td>Continuous learning and automated retraining pipeline</td>
       <td>💡 Stretch Goal</td>
     </tr>
