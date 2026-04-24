@@ -20,8 +20,20 @@ def start_dashboard():
 def run_detector(mode, target):
     """Run the threat detection engine."""
     logger.info(f"Starting detector in {mode} mode on target: {target}")
-    # TODO: Implement detector orchestrator
-    print(f"Detector placeholder started for {mode} -> {target}.")
+    from core.detector import detector_instance
+    import time
+    
+    success = detector_instance.start(mode=mode, target=target)
+    if not success:
+        logger.error("Failed to start detector.")
+        return
+        
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        logger.info("Interrupt received, stopping detector...")
+        detector_instance.stop()
 
 def train_models(dataset_path):
     """Run the machine learning training pipeline."""
