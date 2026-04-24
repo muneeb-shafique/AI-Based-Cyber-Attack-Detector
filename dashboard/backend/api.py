@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
 
-logger = logging.getLogger("CyberAttackDetector.API")
+import logging
+from core.detector import detector_instance
 
 app = FastAPI(
     title="AI-Based Cyber Attack Detector API",
@@ -57,13 +58,21 @@ def get_core_metrics():
 
 @api_router.get("/logs")
 def get_logs():
-    """Return a mock log stream entry."""
-    is_crit = random.random() > 0.92
+    """Return a mock log stream entry or a real alert if available."""
+    alerts = detector_instance.get_latest_alerts()
+    if alerts and random.random() > 0.5:
+        alert = alerts[0]
+        return {
+            "is_critical": True,
+            "ip": alert["source_ip"],
+            "verdict": f"THREAT: {alert['attack_type']}"
+        }
+    
     ip = f"192.168.{random.randint(0, 255)}.{random.randint(0, 255)}"
     return {
-        "is_critical": is_crit,
+        "is_critical": False,
         "ip": ip,
-        "verdict": "DROP_&_REPORT" if is_crit else "PASS_VALIDATED"
+        "verdict": "PASS_VALIDATED"
     }
 
 @app.get("/health")
@@ -74,20 +83,21 @@ def health_check():
 def start_detection(request: DetectionRequest):
     """
     Start the threat detection engine.
-    (Placeholder for ML and Core Logic)
     """
-    logger.info(f"API Request to start detection in {request.mode} mode on target: {request.target}")
-    # TODO: Integrate with core.detector module
-    return {"message": f"Detection placeholder started for {request.mode} -> {request.target}"}
+    success = detector_instance.start(request.mode, request.target)
+    if success:
+        return {"message": f"Detector started in {request.mode} mode on target: {request.target}"}
+    return {"message": "Detector is already running"}
 
 @api_router.post("/detect/stop")
 def stop_detection():
     """
     Stop the currently running threat detection.
     """
-    logger.info("API Request to stop detection")
-    # TODO: Signal core.detector to stop
-    return {"message": "Detection placeholder stopped"}
+    success = detector_instance.stop()
+    if success:
+        return {"message": "Detector stopped successfully"}
+    return {"message": "Detector is not running"}
 
 @api_router.post("/train")
 def train_models(request: TrainRequest):
@@ -104,8 +114,7 @@ def get_alerts():
     """
     Retrieve latest threat alerts.
     """
-    # TODO: Fetch from database
-    return {"alerts": []}
+    return {"alerts": detector_instance.get_latest_alerts()}
 
 app.include_router(api_router)
 
