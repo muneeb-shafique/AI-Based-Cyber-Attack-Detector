@@ -258,7 +258,7 @@
 <body>
 
     <nav>
-        <div class="nav-icon" onclick="location.href='index.html'">⌬</div>
+        <div class="nav-icon" onclick="location.href='dashboard.html'">⌬</div>
         <div class="nav-icon active">⚯</div>
         <div class="nav-icon">📡</div>
         <div class="nav-icon">🛡️</div>
@@ -418,13 +418,19 @@
             if (term.children.length > 8) term.removeChild(term.firstChild);
         }
 
-        // 3. Dynamic Values
-        setInterval(() => {
-            const load = Math.floor(Math.random() * 20 + 40);
-            document.getElementById('load-pct').innerText = load + "%";
-            document.getElementById('load-bar').style.width = load + "%";
-            document.getElementById('entropy-val').innerText = (Math.random() * 0.05).toFixed(4);
-        }, 2000);
+        // 3. Dynamic Values from Backend API
+        async function fetchCoreMetrics() {
+            try {
+                const response = await fetch('/api/v1/core-metrics');
+                const data = await response.json();
+                document.getElementById('load-pct').innerText = data.load_pct;
+                document.getElementById('load-bar').style.width = data.load_pct;
+                document.getElementById('entropy-val').innerText = data.entropy;
+            } catch (e) {
+                console.error("Error fetching core metrics:", e);
+            }
+        }
+        setInterval(fetchCoreMetrics, 2000);
 
         window.onresize = init;
         init();

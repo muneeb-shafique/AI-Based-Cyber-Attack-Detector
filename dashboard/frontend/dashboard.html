@@ -260,7 +260,9 @@
 
     <nav>
         <div class="nav-icon active">⌬</div>
-        <div class="nav-icon">⚯</div>
+        <a style="text-decoration: none;" href="neural_core.html">
+            <div class="nav-icon">⚯</div>
+        </a>
         <div class="nav-icon">📡</div>
         <div class="nav-icon">🛡️</div>
         <div style="margin-top: auto;" class="nav-icon">⚙️</div>
@@ -369,29 +371,40 @@
             }
         }
 
-        // 3. Automated Log Stream
+        // 3. Automated Log Stream from Backend API
         const logs = document.getElementById('log-feed');
-        function addLog() {
-            const isCrit = Math.random() > 0.92;
-            const div = document.createElement('div');
-            div.className = `log-entry ${isCrit ? 'critical' : ''}`;
-            const ip = `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-            div.innerHTML = `[${new Date().toLocaleTimeString()}] INBOUND_FLOW: ${ip}<br>VERDICT: ${isCrit ? 'DROP_&_REPORT' : 'PASS_VALIDATED'}`;
-            logs.prepend(div);
-            if (logs.children.length > 30) logs.removeChild(logs.lastChild);
+        async function fetchLog() {
+            try {
+                const response = await fetch('/api/v1/logs');
+                const data = await response.json();
+                const div = document.createElement('div');
+                div.className = `log-entry ${data.is_critical ? 'critical' : ''}`;
+                div.innerHTML = `[${new Date().toLocaleTimeString()}] INBOUND_FLOW: ${data.ip}<br>VERDICT: ${data.verdict}`;
+                logs.prepend(div);
+                if (logs.children.length > 30) logs.removeChild(logs.lastChild);
+            } catch (e) {
+                console.error("Error fetching logs:", e);
+            }
         }
 
-        // 4. Dynamic Metrics
-        setInterval(() => {
-            document.getElementById('f-cpu').innerText = Math.floor(Math.random() * 15 + 5) + "%";
-            document.getElementById('f-lat').innerText = Math.floor(Math.random() * 3 + 2) + "ms";
-            document.getElementById('v-throughput').innerText = (Math.random() * 0.5 + 1.2).toFixed(1) + " GB/s";
-            document.getElementById('v-bar').style.width = Math.random() * 40 + 50 + "%";
-        }, 1500);
+        // 4. Dynamic Metrics from Backend API
+        async function fetchMetrics() {
+            try {
+                const response = await fetch('/api/v1/metrics');
+                const data = await response.json();
+                document.getElementById('f-cpu').innerText = data.cpu;
+                document.getElementById('f-lat').innerText = data.latency;
+                document.getElementById('v-throughput').innerText = data.throughput;
+                document.getElementById('v-bar').style.width = data.bar_width;
+            } catch (e) {
+                console.error("Error fetching metrics:", e);
+            }
+        }
+        setInterval(fetchMetrics, 1500);
 
         window.onresize = () => { init(); drawMap(); };
         init(); draw(); drawMap();
-        setInterval(addLog, 500);
+        setInterval(fetchLog, 500);
     </script>
 </body>
 
