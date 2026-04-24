@@ -121,9 +121,9 @@ Timestamp     :  2026-04-22 10:43:01.002
            │                                             │
            ▼                                             ▼
 ┌──────────────────────┐  ┌──────────────────┐  ┌──────────────────────┐
-│   ALERT ENGINE       │  │  ENCRYPTED LOG   │  │   WEB DASHBOARD      │
-│  Email / Webhook /   │  │  & DATABASE      │  │  Real-time Charts /  │
-│  In-App Notification │  │  (AES encrypted) │  │  Attack Map          │
+│   ALERT ENGINE       │  │  ENCRYPTED LOG   │  │   WEB DASHBOARD     │
+│  Email / Webhook /   │  │  & VECTOR DB     │  │  & AI ANALYST       │
+│  In-App Notification │  │  (Chroma/FAISS)  │  │  (LLM RAG Engine)   │
 └──────────┬───────────┘  └──────────────────┘  └──────────────────────┘
            │
            ▼
@@ -478,7 +478,16 @@ Real-time visualizations served via Flask / FastAPI backend:
 | Model Confidence Histogram | Distribution of model confidence scores |
 | System Health Panel | CPU/memory/inference latency of the detector |
 
-### 8D — Optional Firewall Auto-Block
+### 8D — AI Security Analyst & Vectorization (`llm_engine/`)
+
+Integration of Large Language Models to act as an automated security analyst.
+When a threat is detected:
+1. **Embedding**: The `ThreatReport` and surrounding context are converted into vector embeddings (using Sentence-Transformers).
+2. **Vector DB Storage**: The embeddings are stored in a Vector Database (like ChromaDB or FAISS) to enable semantic similarity search.
+3. **RAG Pipeline**: When analysts investigate an attack, the LLM uses Retrieval-Augmented Generation to search for similar past incidents and summarizes the findings in natural language.
+4. **Natural Language Explanations**: The LLM explains complex zero-day anomalies, suggesting actionable mitigation strategies directly on the dashboard.
+
+### 8E — Optional Firewall Auto-Block
 
 If enabled, confirmed CRITICAL-severity threats automatically push the source IP to a firewall blocklist via API (e.g., iptables on Linux, or a cloud firewall API).
 
@@ -742,9 +751,12 @@ network/                    ml/                      core/
                                       ▼              ▼              ▼
                                alerts/          dashboard/        data/
                                alert_manager.py  backend/     encrypted_db
-                               notifiers/        frontend/
-                               ├── email.py
-                               └── webhook.py
+                               notifiers/        frontend/          │
+                               ├── email.py                         ▼
+                               └── webhook.py                 llm_engine/
+                                                            ├── ai_analyst.py
+                                                            ├── rag_pipeline.py
+                                                            └── vector_store.py
 ```
 
 ---
