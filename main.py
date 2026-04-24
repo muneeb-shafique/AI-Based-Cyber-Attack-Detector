@@ -12,9 +12,10 @@ logger = logging.getLogger("CyberAttackDetector")
 
 def start_dashboard():
     """Start the web dashboard."""
-    logger.info("Starting web dashboard...")
-    # TODO: Implement dashboard startup
-    print("Dashboard placeholder started. (Press Ctrl+C to stop)")
+    logger.info("Starting web dashboard API using FastAPI/Uvicorn...")
+    import uvicorn
+    # Run the FastAPI application using uvicorn
+    uvicorn.run("dashboard.backend.api:app", host="0.0.0.0", port=8000, reload=True)
 
 def run_detector(mode, target):
     """Run the threat detection engine."""
