@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THREAT VISION - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020204;
+            --panel-bg: rgba(10, 15, 25, 0.7);
+            --border-color: rgba(0, 240, 255, 0.2);
+            --cyan: #00f0ff;
+            --magenta: #ff003c;
+            --green: #00ff66;
+            --purple: #8a2be2;
+            --text-main: #e0e6ed;
+            --text-dim: #708090;
+            --glow-cyan: 0 0 15px rgba(0, 240, 255, 0.4);
+            --glow-purple: 0 0 15px rgba(138, 43, 226, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            grid-template-rows: 80px 1fr;
+            background-image: radial-gradient(circle at 100% 100%, rgba(0,240,255,0.05) 0%, transparent 50%);
+        }
+
+        /* --- Sidebar Navigation --- */
+        nav {
+            grid-row: 1 / -1;
+            background: rgba(2, 2, 4, 0.9);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            gap: 30px;
+            z-index: 10;
+        }
+
+        .nav-item {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-dim);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            text-decoration: none;
+        }
+
+        .nav-item::before {
+            content: ''; position: absolute; left: -15px; width: 4px; height: 0;
+            background: var(--cyan); transition: height 0.3s; border-radius: 2px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--cyan); background: rgba(0, 240, 255, 0.1);
+            box-shadow: var(--glow-cyan);
+        }
+        
+        .nav-item.active::before { height: 100%; }
+
+        /* --- Header --- */
+        header {
+            grid-column: 2 / -1;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 40px; border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(90deg, rgba(2,2,4,0.9) 0%, transparent 100%);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: 4px;
+            text-transform: uppercase; display: flex; align-items: center; gap: 15px;
+        }
+
+        .logo span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+        .system-status { display: flex; gap: 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); }
+        .system-status span { color: var(--text-main); }
+
+        /* --- Main Content: Settings Grid --- */
+        main {
+            grid-column: 2; grid-row: 2;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            overflow-y: auto;
+        }
+
+        .settings-panel {
+            background: var(--panel-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 30px; display: flex; flex-direction: column; gap: 25px;
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1rem; font-weight: 600; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--cyan);
+            border-bottom: 1px dashed var(--border-color); padding-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Form elements */
+        .setting-row { display: flex; justify-content: space-between; align-items: center; }
+        .setting-label { font-size: 0.9rem; color: var(--text-main); }
+        .setting-desc { font-size: 0.7rem; color: var(--text-dim); margin-top: 5px; }
+
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5); transition: .4s; border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: var(--text-dim); transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: rgba(0, 240, 255, 0.2); border-color: var(--cyan); }
+        input:checked + .slider:before { transform: translateX(26px); background-color: var(--cyan); box-shadow: var(--glow-cyan); }
+
+        /* Custom Dropdown */
+        select {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 240, 255, 0.3);
+            color: var(--cyan); padding: 8px 15px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+            outline: none; cursor: pointer;
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none; width: 150px; background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px;
+            border-radius: 50%; background: var(--cyan); cursor: pointer;
+            margin-top: -6px; box-shadow: var(--glow-cyan);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer;
+            background: rgba(255,255,255,0.1); border-radius: 2px;
+        }
+
+        .btn-save {
+            background: rgba(0,240,255,0.1); border: 1px solid var(--cyan);
+            color: var(--cyan); padding: 12px 24px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: bold;
+            cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+            align-self: flex-end; margin-top: 10px;
+        }
+        .btn-save:hover { background: rgba(0, 240, 255, 0.2); box-shadow: var(--glow-cyan); }
+        
+        .toast {
+            position: fixed; bottom: 30px; right: -300px;
+            background: rgba(0, 240, 255, 0.1); border-left: 4px solid var(--cyan);
+            color: var(--text-main); padding: 15px 20px; font-family: 'JetBrains Mono', monospace;
+            transition: right 0.4s ease; border-radius: 4px; z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="dashboard.html" class="nav-item" title="Dashboard">⌬</a>
+        <a href="neural_core.html" class="nav-item" title="Neural Core">⚯</a>
+        <a href="network_map.html" class="nav-item" title="Network Map">📡</a>
+        <a href="threat_logs.html" class="nav-item" title="Threat Logs">🛡️</a>
+        <a href="settings.html" class="nav-item active" style="margin-top: auto;" title="Settings">⚙️</a>
+    </nav>
+
+    <header>
+        <div class="logo">THREAT <span>VISION</span></div>
+        <div class="system-status">
+            <div>FIRMWARE: <span style="color: var(--cyan);">v2.4.1_stable</span></div>
+            <div>ACCESS: <span style="color: var(--green);">ROOT_ADMIN</span></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Neural Engine Settings -->
+        <div class="settings-panel">
+            <div class="panel-title">⚯ Neural Engine Configuration</div>
+            
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Supervised Model Selection</div>
+                    <div class="setting-desc">Algorithm for known attack classification</div>
+                </div>
+                <select>
+                    <option>Random Forest (Default)</option>
+                    <option>XGBoost (High Performance)</option>
+                    <option>Deep Neural Network (Keras)</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Anomaly Sensitivity</div>
+                    <div class="setting-desc">Autoencoder reconstruction error threshold</div>
+                </div>
+                <input type="range" min="1" max="100" value="75">
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">LLM Analyst Integration</div>
+                    <div class="setting-desc">Enable automated AI explanations for critical alerts</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <button class="btn-save" onclick="saveSettings()">Apply Core Updates</button>
+        </div>
+
+        <!-- System & Network Settings -->
+        <div class="settings-panel" style="border-color: rgba(138, 43, 226, 0.3);">
+            <div class="panel-title" style="color: var(--purple);">📡 Network & Telemetry</div>
+            
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Capture Interface</div>
+                    <div class="setting-desc">Target network interface for packet sniffing</div>
+                </div>
+                <select style="border-color: var(--purple); color: var(--purple);">
+                    <option>eth0 (Default)</option>
+                    <option>wlan0 (Wireless)</option>
+                    <option>lo (Loopback)</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Flow Aggregation Window</div>
+                    <div class="setting-desc">Time in ms to aggregate packets into a single flow feature vector</div>
+                </div>
+                <select style="border-color: var(--purple); color: var(--purple);">
+                    <option>500 ms</option>
+                    <option selected>1000 ms (Standard)</option>
+                    <option>2000 ms</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Persist Alerts to Database</div>
+                    <div class="setting-desc">Write threat reports to local SQLite volume</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider" style="background-color: rgba(138, 43, 226, 0.2);"></span>
+                </label>
+            </div>
+
+            <button class="btn-save" style="border-color: var(--purple); color: var(--purple);" onclick="saveSettings()">Update Network Config</button>
+        </div>
+    </main>
+
+    <div class="toast" id="toast">CONFIG_UPDATED: Settings applied successfully.</div>
+
+    <script>
+        function saveSettings() {
+            const toast = document.getElementById('toast');
+            toast.style.right = '30px';
+            setTimeout(() => {
+                toast.style.right = '-300px';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
