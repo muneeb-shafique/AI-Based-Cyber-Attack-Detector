@@ -33,6 +33,10 @@ class CyberDetector:
         if self.is_running:
             logger.warning("Detector is already running.")
             return False
+
+        if mode not in {"live", "pcap"}:
+            logger.error(f"Invalid detector mode '{mode}'. Expected 'live' or 'pcap'.")
+            return False
             
         logger.info(f"Starting detector in {mode} mode on target {target}")
         self.is_running = True
