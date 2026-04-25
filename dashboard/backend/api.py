@@ -4,8 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import logging
 
-import logging
 from core.detector import detector_instance
+
+logger = logging.getLogger("CyberAttackDetector.API")
 
 app = FastAPI(
     title="AI-Based Cyber Attack Detector API",

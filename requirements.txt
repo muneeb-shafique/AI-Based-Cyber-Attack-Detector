@@ -24,6 +24,7 @@ uvicorn
 python-dotenv
 joblib
 colorama
+psutil
 
 # LLM, Embedding & Vectorization
 langchain
