@@ -1,1 +1,6 @@
 data/
+
+# Python cache and artifacts
+__pycache__/
+*.py[cod]
+*.pyo
