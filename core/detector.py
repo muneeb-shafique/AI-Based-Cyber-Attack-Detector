@@ -6,6 +6,10 @@ from core.decision_engine import ThreatDecisionEngine
 from network.features.feature_extractor import FlowAggregator
 from network.capture.packet_capture import LivePacketCapture
 from network.parser.pcap_parser import PcapParser
+from ml.classifier.supervised import SupervisedClassifier
+from ml.anomaly.unsupervised import AnomalyDetector
+from llm_engine.analyst import LLMSecurityAnalyst
+from db.database import Database
 
 logger = logging.getLogger("CyberAttackDetector.Detector")
 
@@ -17,11 +21,12 @@ class CyberDetector:
         self.flow_aggregator = FlowAggregator()
         self.capture_module = None
         
-        # Placeholders for ML models
-        self.classifier = None 
-        self.anomaly_detector = None
+        # ML Models, LLM, and DB
+        self.classifier = SupervisedClassifier()
+        self.anomaly_detector = AnomalyDetector()
+        self.llm_analyst = LLMSecurityAnalyst()
+        self.db = Database()
         
-        self.latest_alerts = []
         self.metrics = {"flows_processed": 0}
 
     def start(self, mode="live", target="eth0"):
@@ -73,28 +78,23 @@ class CyberDetector:
             flows = self.flow_aggregator.get_latest_flows()
             
             for flow in flows:
-                # 2. ML Prediction Placeholders
-                is_attack = random.random() > 0.85
-                supervised_pred = {
-                    "label": "DDoS" if is_attack else "BENIGN",
-                    "confidence": random.uniform(0.7, 0.99) if is_attack else random.uniform(0.9, 0.99)
-                }
-                
-                anomaly_score = random.uniform(-0.5, 0.5) # < -0.1 is anomalous
+                # 2. ML Predictions
+                supervised_pred = self.classifier.predict(flow)
+                anomaly_score = self.anomaly_detector.get_anomaly_score(flow)
                 
                 # 3. Decision Engine
                 report = self.decision_engine.evaluate_flow(flow, supervised_pred, anomaly_score)
                 
                 self.metrics["flows_processed"] += 1
                 
-                # 4. Alerting & Logging Placeholder
+                # 4. Alerting, LLM Analysis, and DB Storage
                 if report["is_threat"]:
-                    self.latest_alerts.insert(0, report)
-                    if len(self.latest_alerts) > 50:
-                        self.latest_alerts.pop()
+                    analysis = self.llm_analyst.analyze_threat(report)
+                    report["llm_analysis"] = analysis
+                    self.db.save_alert(report)
                     
     def get_latest_alerts(self):
-        return self.latest_alerts
+        return self.db.get_recent_alerts(limit=50)
 
 # Global singleton instance for the API and CLI to interact with
 detector_instance = CyberDetector()
