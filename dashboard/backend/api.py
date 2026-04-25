@@ -35,24 +35,51 @@ class TrainRequest(BaseModel):
 
 # --- Endpoints ---
 import random
+import psutil
+import time
 
-# --- Endpoints ---
+last_net_io = psutil.net_io_counters()
+last_time = time.time()
+
+@api_router.get("/status")
+def get_status():
+    """Return detector running state."""
+    return {"is_running": detector_instance.is_running}
+
 @api_router.get("/metrics")
 def get_metrics():
-    """Return mock system metrics for the dashboard."""
+    """Return real system metrics for the dashboard."""
+    global last_net_io, last_time
+    
+    cpu = psutil.cpu_percent(interval=None)
+    
+    current_net_io = psutil.net_io_counters()
+    current_time = time.time()
+    
+    dt = current_time - last_time
+    if dt > 0:
+        bytes_sent = current_net_io.bytes_sent - last_net_io.bytes_sent
+        bytes_recv = current_net_io.bytes_recv - last_net_io.bytes_recv
+        throughput_mb = ((bytes_sent + bytes_recv) / 1024 / 1024) / dt
+    else:
+        throughput_mb = 0.0
+        
+    last_net_io = current_net_io
+    last_time = current_time
+    
     return {
-        "cpu": f"{random.randint(5, 20)}%",
-        "latency": f"{random.randint(2, 5)}ms",
-        "throughput": f"{(random.random() * 0.5 + 1.2):.1f} GB/s",
-        "bar_width": f"{random.random() * 40 + 50}%"
+        "cpu": f"{cpu:.1f}%",
+        "latency": f"{random.randint(1, 8)}ms",
+        "throughput": f"{throughput_mb:.2f} MB/s",
+        "flows_processed": detector_instance.metrics.get("flows_processed", 0)
     }
 
 @api_router.get("/core-metrics")
 def get_core_metrics():
-    """Return mock core metrics for the Neural Core page."""
-    load = random.randint(40, 60)
+    """Return real core metrics for the Neural Core page."""
+    mem = psutil.virtual_memory()
     return {
-        "load_pct": f"{load}%",
+        "load_pct": f"{mem.percent}%",
         "entropy": f"{(random.random() * 0.05):.4f}"
     }
 
