@@ -482,43 +482,6 @@ For Windows
 
 <hr/>
 
-<!-- TEAM -->
-<h2 id="team">Team</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Role</th>
-      <th>GitHub</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Muneeb Shafique</td>
-      <td>Frontend / Backend Developer / Team Lead</td>
-      <td><a href="https://github.com/muneeb-shafique">@muneebshafique</a></td>
-    </tr>
-    <tr>
-      <td>Saif ur Rehman</td>
-      <td>Backend Developer / Data Engineer</td>
-      <td><a href="https://github.com/SaifurRehman2911">@saifurrehman</a></td>
-    </tr>
-    <tr>
-      <td>Omer Ansar Tiwana</td>
-      <td>AI Engineer</td>
-      <td><a href="https://github.com/omeransar2005">@omeransar</a></td>
-    </tr>
-    <tr>
-      <td>Dayyan Riaz</td>
-      <td>ML Specialist</td>
-      <td><a href="https://github.com/Dayyanriaz">@dayyanriaz</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<hr/>
-
 <!-- ETHICAL USE -->
 <h2>Ethical Use Notice</h2>
 
