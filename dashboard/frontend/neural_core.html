@@ -166,46 +166,63 @@
 <body>
 
     <nav>
-        <a href="dashboard.html" class="nav-item" title="Dashboard">⌬</a>
-        <a href="neural_core.html" class="nav-item active" title="Neural Core">⚯</a>
-        <a href="network_map.html" class="nav-item" title="Network Map">📡</a>
-        <a href="threat_logs.html" class="nav-item" title="Threat Logs">🛡️</a>
-        <a href="settings.html" class="nav-item" style="margin-top: auto;" title="Settings">⚙️</a>
+        <a href="dashboard.html" class="nav-item" title="Dashboard"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></a>
+        <a href="neural_core.html" class="nav-item active" title="Neural Core"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></a>
+        <a href="network_map.html" class="nav-item" title="Network Map"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></a>
+        <a href="threat_logs.html" class="nav-item" title="Threat Logs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></a>
+        <a href="firewall.html" class="nav-item" title="Firewall Controls"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></a>
+        <a href="settings.html" class="nav-item" style="margin-top: auto;" title="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
     </nav>
 
     <header>
         <div class="logo">THREAT <span>VISION</span></div>
+        <div style="display:flex; gap:15px;">
+            <button class="nav-item" style="border: 1px solid var(--purple); color: var(--purple); font-size: 0.8rem; width: auto; padding: 0 15px; height: 35px; border-radius: 4px; font-weight: bold; background: rgba(138,43,226,0.1);" onclick="retrainModels()" id="btn-retrain">RETRAIN MODELS</button>
+        </div>
         <div class="system-status">
-            <div>MODEL: <span style="color: var(--purple);">TRANSFORMER_V4</span></div>
-            <div>STABILITY: <span id="status-text" style="color: var(--green);">99.8%</span></div>
+            <div>XGB: <span id="hdr-xgb" style="color: var(--text-dim);">CHECKING...</span></div>
+            <div>ENGINE: <span id="status-text" style="color: var(--text-dim);">IDLE</span></div>
         </div>
     </header>
 
     <section class="engine-panel">
+        <!-- XGBoost Classifier -->
         <div class="engine-card">
-            <span class="label">Supervised Layer (RandomForest)</span>
-            <div class="value">ACTIVE</div>
-            <div style="font-size: 0.65rem; color: var(--cyan); margin-top: 8px; font-family: 'JetBrains Mono';">WEIGHT_SYNC: COMPLETED</div>
+            <span class="label">Supervised Layer — XGBoost</span>
+            <div class="value" id="xgb-status" style="font-size:1.1rem;">CHECKING…</div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-top:8px;font-family:'JetBrains Mono';">UNSW-NB15 · 18 FEATURES · 11 CLASSES</div>
         </div>
 
+        <!-- Autoencoder Anomaly Detector -->
         <div class="engine-card">
-            <span class="label">Unsupervised Layer (Autoencoder)</span>
-            <div class="value" id="entropy-val">0.0241</div>
-            <div style="font-size: 0.65rem; color: var(--text-dim); margin-top: 8px; font-family: 'JetBrains Mono';">RECONSTRUCTION_ERROR</div>
-        </div>
-
-        <div class="engine-card">
-            <span class="label">Hyper-Parametric Load</span>
-            <div class="value" id="load-pct">42%</div>
-            <div class="bar-wrap">
-                <div class="bar-fill" id="load-bar" style="width: 42%;"></div>
+            <span class="label">Anomaly Layer — Autoencoder</span>
+            <div class="value" id="ae-status" style="font-size:1.1rem;">CHECKING…</div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-top:8px;font-family:'JetBrains Mono';">
+                RECON ERR: <span id="entropy-val">—</span>
             </div>
         </div>
 
-        <div class="engine-card" style="border-left-color: var(--magenta);">
-            <span class="label">Threat Heuristics</span>
-            <div class="value" style="color: var(--magenta);">7 / 10</div>
-            <div style="font-size: 0.65rem; color: var(--text-dim); margin-top: 8px; font-family: 'JetBrains Mono';">SEVERITY_INDEX</div>
+        <!-- System Memory Load -->
+        <div class="engine-card">
+            <span class="label">System Memory Load</span>
+            <div class="value" id="load-pct">—</div>
+            <div class="bar-wrap">
+                <div class="bar-fill" id="load-bar" style="width:0%;"></div>
+            </div>
+        </div>
+
+        <!-- Threats Detected -->
+        <div class="engine-card" style="border-left-color:var(--magenta);">
+            <span class="label">Threats Detected</span>
+            <div class="value" id="threats-val" style="color:var(--magenta);">0</div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-top:8px;font-family:'JetBrains Mono';">CURRENT SESSION</div>
+        </div>
+
+        <!-- Benign Flows -->
+        <div class="engine-card" style="border-left-color:var(--green);">
+            <span class="label">Benign Flows Validated</span>
+            <div class="value" id="benign-val" style="color:var(--green);">0</div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-top:8px;font-family:'JetBrains Mono';">CURRENT SESSION</div>
         </div>
     </section>
 
@@ -296,7 +313,7 @@
                 
                 ctx.beginPath();
                 ctx.arc(p1.x, p1.y, nodeSize, 0, Math.PI * 2);
-                ctx.fillStyle = p1.scale > 1.2 ? \`rgba(138, 43, 226, \${0.8 * pulse + 0.2})\` : \`rgba(0, 240, 255, \${0.5 * pulse})\`;
+                ctx.fillStyle = p1.scale > 1.2 ? `rgba(138, 43, 226, ${0.8 * pulse + 0.2})` : `rgba(0, 240, 255, ${0.5 * pulse})`;
                 ctx.fill();
 
                 // Connections
@@ -305,7 +322,7 @@
                     const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
                     if (dist < 120 * p1.scale) {
                         ctx.beginPath();
-                        ctx.strokeStyle = \`rgba(138, 43, 226, \${0.15 * (1 - dist / (120 * p1.scale)) * p1.scale})\`;
+                        ctx.strokeStyle = `rgba(138, 43, 226, ${0.15 * (1 - dist / (120 * p1.scale)) * p1.scale})`;
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
@@ -336,28 +353,90 @@
         }
 
         async function fetchCoreMetrics() {
-            if (!isEngineRunning) return;
             try {
-                const response = await fetch('/api/v1/core-metrics');
-                const data = await response.json();
-                
-                // Add jitter to make it look alive between API calls
-                const loadBase = parseInt(data.load_pct);
-                const jitterLoad = Math.min(100, Math.max(0, loadBase + (Math.random() * 4 - 2)));
-                
-                document.getElementById('load-pct').innerText = jitterLoad.toFixed(0) + "%";
-                document.getElementById('load-bar').style.width = jitterLoad + "%";
-                
-                document.getElementById('entropy-val').innerText = data.entropy;
+                const res = await fetch('/api/v1/core-metrics');
+                const d = await res.json();
+
+                // Memory load bar
+                const loadBase = parseInt(d.load_pct) || 0;
+                const jitter   = Math.min(100, Math.max(0, loadBase + (Math.random() * 4 - 2)));
+                document.getElementById('load-pct').innerText    = jitter.toFixed(0) + '%';
+                document.getElementById('load-bar').style.width  = jitter + '%';
+                document.getElementById('entropy-val').innerText = d.entropy || '—';
+
+                // XGBoost model badge
+                const xgbEl  = document.getElementById('xgb-status');
+                const hdrXgb = document.getElementById('hdr-xgb');
+                if (d.xgb_model === 'LOADED') {
+                    xgbEl.innerText  = '✔ LOADED';
+                    xgbEl.style.color = 'var(--green)';
+                    hdrXgb.innerText  = 'REAL MODEL';
+                    hdrXgb.style.color = 'var(--green)';
+                } else {
+                    xgbEl.innerText  = '⚠ STUB MODE';
+                    xgbEl.style.color = 'var(--magenta)';
+                    hdrXgb.innerText  = 'STUB';
+                    hdrXgb.style.color = 'var(--magenta)';
+                }
+
+                // Autoencoder badge
+                const aeEl = document.getElementById('ae-status');
+                if (d.autoencoder === 'LOADED') {
+                    aeEl.innerText  = '✔ LOADED';
+                    aeEl.style.color = 'var(--green)';
+                } else {
+                    aeEl.innerText  = '⚠ STUB MODE';
+                    aeEl.style.color = 'var(--magenta)';
+                }
+
+                // Threat / benign counters
+                if (d.threats_detected !== undefined)
+                    document.getElementById('threats-val').innerText = d.threats_detected.toLocaleString();
+                if (d.benign_flows !== undefined)
+                    document.getElementById('benign-val').innerText  = d.benign_flows.toLocaleString();
+
             } catch (e) {
-                console.error("Error fetching core metrics:", e);
+                console.error('[NeuralCore] core-metrics error:', e);
             }
         }
-        
+
+        // Retrain Simulation
+        function retrainModels() {
+            const btn = document.getElementById('btn-retrain');
+            if(btn.innerText.includes("ING")) return;
+            btn.innerText = "TRAINING (0%)";
+            let p = 0;
+            const t = setInterval(() => {
+                p += Math.floor(Math.random() * 10) + 2;
+                if(p >= 100) {
+                    clearInterval(t);
+                    btn.innerText = "MODELS OPTIMIZED";
+                    btn.style.color = "var(--green)";
+                    btn.style.borderColor = "var(--green)";
+                    setTimeout(() => {
+                        btn.innerText = "RETRAIN MODELS";
+                        btn.style.color = "var(--purple)";
+                        btn.style.borderColor = "var(--purple)";
+                    }, 3000);
+                } else {
+                    btn.innerText = `TRAINING (${p}%)`;
+                }
+            }, 300);
+            
+            fetch('/api/v1/train', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({dataset_path: 'local_db'})
+            });
+        }
+
+        // Initial load + polling
         fetchStatus();
-        setInterval(fetchStatus, 2000);
-        setInterval(fetchCoreMetrics, 2000);
+        fetchCoreMetrics();
+        setInterval(fetchStatus,      2000);
+        setInterval(fetchCoreMetrics, 3000);
 
     </script>
+    <script src="/static/auth.js"></script>
 </body>
 </html>

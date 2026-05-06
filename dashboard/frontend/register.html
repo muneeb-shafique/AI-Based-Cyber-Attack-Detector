@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THREAT VISION - Enlist Operator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030508;
+            --panel-bg: rgba(10, 15, 25, 0.6);
+            --border-color: rgba(0, 240, 255, 0.3);
+            --cyan: #00f0ff;
+            --magenta: #ff003c;
+            --green: #00ff66;
+            --purple: #8a2be2;
+            --text-main: #e0e6ed;
+            --text-dim: #708090;
+            --glow-cyan: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+
+        #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+        .auth-container {
+            position: relative; z-index: 10;
+            width: 450px; padding: 40px;
+            background: rgba(5, 8, 15, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color); border-radius: 16px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 240, 255, 0.1);
+            animation: formEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes formEntrance {
+            0% { opacity: 0; transform: scale(1.05) rotateX(-10deg); }
+            100% { opacity: 1; transform: scale(1) rotateX(0); }
+        }
+
+        .logo {
+            text-align: center; font-size: 1.5rem; font-weight: 800; letter-spacing: 4px;
+            margin-bottom: 25px; text-transform: uppercase;
+        }
+        .logo span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label {
+            display: block; font-size: 0.75rem; color: var(--purple);
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1.5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .input-group input, .input-group select {
+            width: 100%; background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 12px 15px; color: var(--text-main); font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .input-group select { appearance: none; cursor: pointer; }
+        .input-group input:focus, .input-group select:focus {
+            outline: none; border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0,240,255,0.2);
+        }
+
+        .btn-submit {
+            width: 100%; padding: 14px; background: transparent;
+            border: 1px solid var(--cyan); border-radius: 8px;
+            color: var(--cyan); font-size: 0.9rem; font-weight: 600;
+            letter-spacing: 2px; text-transform: uppercase;
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: all 0.4s; z-index: 1;
+            font-family: 'JetBrains Mono', monospace; margin-top: 10px;
+        }
+        .btn-submit::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%; background: var(--cyan);
+            transition: all 0.4s; z-index: -1;
+        }
+        .btn-submit:hover::before { left: 0; }
+        .btn-submit:hover { color: #000; box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+
+        .form-footer { text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); }
+        .form-footer a { color: var(--purple); text-decoration: none; transition: color 0.3s; }
+        .form-footer a:hover { color: var(--text-main); text-shadow: 0 0 10px var(--purple); }
+
+        #msg-box {
+            font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
+            text-align: center; margin-bottom: 15px; display: none; padding: 10px; border-radius: 4px;
+        }
+        .msg-error { background: rgba(255,0,60,0.1); color: var(--magenta); border: 1px solid var(--magenta); }
+        .msg-success { background: rgba(0,255,102,0.1); color: var(--green); border: 1px solid var(--green); }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="auth-container">
+        <div class="logo">OPERATOR <span>ENLISTMENT</span></div>
+        <div id="msg-box"></div>
+        
+        <form id="register-form">
+            <div class="input-group">
+                <label>Operator ID</label>
+                <input type="text" id="username" required autocomplete="off" placeholder="Choose a username">
+            </div>
+            <div class="input-group">
+                <label>Security Key</label>
+                <input type="password" id="password" required placeholder="Create a password">
+            </div>
+            <div class="input-group">
+                <label>Clearance Level (Role)</label>
+                <select id="role">
+                    <option value="viewer">Viewer (Read Only)</option>
+                    <option value="analyst">Analyst (Logs & Triage)</option>
+                    <option value="admin">Administrator (Full Access)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">GRANT CLEARANCE</button>
+        </form>
+
+        <div class="form-footer">
+            Already enlisted? <a href="/login.html">Initialize Session</a>
+        </div>
+    </div>
+
+    <script>
+        // Radar/Grid background animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, angle = 0;
+
+        function init() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(3, 5, 8, 0.1)';
+            ctx.fillRect(0, 0, w, h);
+            
+            const cx = w/2; const cy = h/2; const radius = Math.max(w, h);
+            
+            // Grid
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=0; i<w; i+=50) { ctx.moveTo(i, 0); ctx.lineTo(i, h); }
+            for(let i=0; i<h; i+=50) { ctx.moveTo(0, i); ctx.lineTo(w, i); }
+            ctx.stroke();
+
+            // Radar sweep
+            angle += 0.02;
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, 0, 0.2);
+            ctx.closePath();
+            const grad = ctx.createRadialGradient(0,0,0, 0,0,radius);
+            grad.addColorStop(0, 'rgba(0, 240, 255, 0.2)');
+            grad.addColorStop(1, 'rgba(0, 240, 255, 0)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.restore();
+
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init(); draw();
+
+        // Registration Logic
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const r = document.getElementById('role').value;
+            const msgBox = document.getElementById('msg-box');
+            
+            try {
+                const res = await fetch('/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username: u, password: p, role: r})
+                });
+                const data = await res.json();
+                
+                if(res.ok) {
+                    msgBox.className = 'msg-success';
+                    msgBox.innerText = 'CLEARANCE GRANTED. REDIRECTING...';
+                    msgBox.style.display = 'block';
+                    setTimeout(() => { window.location.href = '/login.html'; }, 1500);
+                } else {
+                    msgBox.className = 'msg-error';
+                    msgBox.innerText = data.detail || 'ENLISTMENT FAILED';
+                    msgBox.style.display = 'block';
+                }
+            } catch(err) {
+                console.error(err);
+                msgBox.className = 'msg-error';
+                msgBox.innerText = 'SYSTEM OFFLINE';
+                msgBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

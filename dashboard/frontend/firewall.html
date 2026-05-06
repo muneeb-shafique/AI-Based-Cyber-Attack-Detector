@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THREAT VISION - Firewall Access Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020204;
+            --panel-bg: rgba(10, 15, 25, 0.7);
+            --border-color: rgba(255, 140, 0, 0.3); /* Orange theme for Firewall */
+            --cyan: #00f0ff;
+            --magenta: #ff003c;
+            --green: #00ff66;
+            --orange: #ff8c00;
+            --text-main: #e0e6ed;
+            --text-dim: #708090;
+            --glow-orange: 0 0 15px rgba(255, 140, 0, 0.4);
+            --glow-red: 0 0 15px rgba(255, 0, 60, 0.4);
+            --glow-green: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 140, 0, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 140, 0, 0.6); }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-main);
+            height: 100vh; width: 100vw; overflow: hidden;
+            display: grid; grid-template-columns: 80px 1fr; grid-template-rows: 80px 1fr;
+            background-image: radial-gradient(circle at 100% 0%, rgba(255,140,0,0.05) 0%, transparent 50%);
+        }
+
+        /* --- Sidebar Navigation --- */
+        nav {
+            grid-row: 1 / -1; background: rgba(2, 2, 4, 0.9); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 30px; z-index: 10;
+        }
+
+        .nav-item {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--text-dim); font-size: 1.5rem; cursor: pointer;
+            transition: all 0.3s; position: relative; text-decoration: none;
+        }
+        .nav-item::before {
+            content: ''; position: absolute; left: -15px; width: 4px; height: 0;
+            background: var(--orange); transition: height 0.3s; border-radius: 2px;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: var(--orange); background: rgba(255, 140, 0, 0.1); box-shadow: var(--glow-orange);
+        }
+        .nav-item.active::before { height: 100%; }
+
+        /* --- Header --- */
+        header {
+            grid-column: 2 / -1; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 40px; border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(90deg, rgba(2,2,4,0.9) 0%, transparent 100%); z-index: 10;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
+        .logo span { color: var(--orange); text-shadow: var(--glow-orange); }
+        .system-status { display: flex; gap: 30px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-dim); }
+
+        /* --- Main Content --- */
+        main {
+            grid-column: 2; grid-row: 2; padding: 40px;
+            display: flex; flex-direction: column; gap: 30px; overflow-y: auto;
+        }
+
+        .control-panel {
+            background: var(--panel-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 30px; display: flex; gap: 20px; align-items: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-size: 0.8rem; text-transform: uppercase; color: var(--orange); font-weight: 600; letter-spacing: 1px; }
+        .input-group input {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 140, 0, 0.3);
+            color: var(--text-main); padding: 12px 15px; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 1rem; outline: none; transition: all 0.3s;
+        }
+        .input-group input:focus { border-color: var(--orange); box-shadow: var(--glow-orange); }
+
+        .btn {
+            padding: 12px 25px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: all 0.3s;
+            text-transform: uppercase; margin-top: 22px;
+        }
+        .btn-block { background: rgba(255,0,60,0.1); border: 1px solid var(--magenta); color: var(--magenta); }
+        .btn-block:hover { background: rgba(255,0,60,0.3); box-shadow: var(--glow-red); }
+        .btn-allow { background: rgba(0,255,102,0.1); border: 1px solid var(--green); color: var(--green); }
+        .btn-allow:hover { background: rgba(0,255,102,0.3); box-shadow: var(--glow-green); }
+
+        .rules-table {
+            background: var(--panel-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color); border-radius: 8px;
+            width: 100%; border-collapse: collapse; text-align: left;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+        }
+        .rules-table th, .rules-table td { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .rules-table th { background: rgba(0,0,0,0.5); color: var(--orange); text-transform: uppercase; font-weight: 600; }
+        .rules-table tr:hover { background: rgba(255,255,255,0.02); }
+        
+        .badge-blocked { background: rgba(255,0,60,0.2); color: var(--magenta); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; border: 1px solid var(--magenta); }
+        .badge-allowed { background: rgba(0,255,102,0.2); color: var(--green); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; border: 1px solid var(--green); }
+        
+        .action-link { color: var(--cyan); cursor: pointer; text-decoration: underline; font-size: 0.75rem; }
+        .action-link:hover { text-shadow: var(--glow-cyan); }
+
+        .toast {
+            position: fixed; bottom: 30px; right: -300px;
+            background: rgba(255, 140, 0, 0.1); border-left: 4px solid var(--orange);
+            color: var(--text-main); padding: 15px 20px; font-family: 'JetBrains Mono', monospace;
+            transition: right 0.4s ease; border-radius: 4px; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="dashboard.html" class="nav-item" title="Dashboard"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></a>
+        <a href="neural_core.html" class="nav-item" title="Neural Core"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></a>
+        <a href="network_map.html" class="nav-item" title="Network Map"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></a>
+        <a href="threat_logs.html" class="nav-item" title="Threat Logs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></a>
+        <a href="firewall.html" class="nav-item active" title="Firewall Controls"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></a>
+        <a href="settings.html" class="nav-item" style="margin-top: auto;" title="Settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
+    </nav>
+
+    <header>
+        <div class="logo">THREAT <span>FIREWALL</span></div>
+        <div class="system-status">
+            <div>IPS MODE: <span style="color: var(--green);">ACTIVE (BLOCKING)</span></div>
+            <div>ACTIVE RULES: <span id="rule-count" style="color: var(--text-main);">0</span></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Manual Control Panel -->
+        <div class="control-panel">
+            <div class="input-group">
+                <label>Target IP Address</label>
+                <input type="text" id="ip-input" placeholder="e.g. 192.168.1.100 or 10.0.0.0/24" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Reason / Note</label>
+                <input type="text" id="note-input" placeholder="e.g. Malicious Actor, Verified Safe" autocomplete="off">
+            </div>
+            <button class="btn btn-block" onclick="addRule('BLOCK')">BLOCK IP</button>
+            <button class="btn btn-allow" onclick="addRule('ALLOW')">ALLOW IP</button>
+        </div>
+
+        <!-- Rules Table -->
+        <table class="rules-table">
+            <thead>
+                <tr>
+                    <th>Target IP / Subnet</th>
+                    <th>Action</th>
+                    <th>Added By</th>
+                    <th>Timestamp</th>
+                    <th>Notes</th>
+                    <th>Controls</th>
+                </tr>
+            </thead>
+            <tbody id="rules-body">
+                <!-- Data populated by JS -->
+            </tbody>
+        </table>
+    </main>
+
+    <div class="toast" id="toast">Rule applied successfully.</div>
+
+    <script>
+        let rules = [];
+
+        function formatTime(isoString) {
+            try { return new Date(isoString).toISOString().replace('T', ' ').substring(0, 19); } catch(e) { return isoString; }
+        }
+
+        async function fetchRules() {
+            try {
+                const res = await fetch('/api/v1/firewall/rules');
+                const data = await res.json();
+                rules = data.rules || [];
+                renderRules();
+            } catch (e) {
+                console.error("Error fetching rules", e);
+            }
+        }
+
+        function renderRules() {
+            const tbody = document.getElementById('rules-body');
+            tbody.innerHTML = '';
+            document.getElementById('rule-count').innerText = rules.length;
+
+            if (rules.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-dim);">NO ACTIVE FIREWALL RULES</td></tr>';
+                return;
+            }
+
+            // sort by newest first
+            rules.sort((a,b) => new Date(b.time) - new Date(a.time)).forEach((rule) => {
+                const badgeClass = rule.action === 'BLOCK' ? 'badge-blocked' : 'badge-allowed';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="color: var(--text-main); font-weight: bold;">${rule.ip}</td>
+                    <td><span class="${badgeClass}">${rule.action}</span></td>
+                    <td style="color: var(--cyan);">${rule.by}</td>
+                    <td style="color: var(--text-dim);">${formatTime(rule.time)}</td>
+                    <td style="color: var(--text-dim);">${rule.notes || '-'}</td>
+                    <td><span class="action-link" onclick="removeRule('${rule.ip}')">REVOKE</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.right = '30px';
+            setTimeout(() => { toast.style.right = '-300px'; }, 3000);
+        }
+
+        async function addRule(action) {
+            const ip = document.getElementById('ip-input').value.trim();
+            const notes = document.getElementById('note-input').value.trim();
+            if (!ip) { showToast("Error: IP Address is required."); return; }
+            
+            const currentUser = localStorage.getItem('threat_user') || 'admin';
+            const ruleObj = { ip, action, by: currentUser, time: new Date().toISOString(), notes };
+            
+            try {
+                await fetch('/api/v1/firewall/rules', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ruleObj)
+                });
+                document.getElementById('ip-input').value = '';
+                document.getElementById('note-input').value = '';
+                await fetchRules();
+                showToast(`Rule applied: ${action} ${ip}`);
+            } catch (e) {
+                showToast("Error applying rule to backend.");
+            }
+        }
+
+        async function removeRule(ip) {
+            try {
+                await fetch(`/api/v1/firewall/rules/${ip}`, { method: 'DELETE' });
+                await fetchRules();
+                showToast(`Rule revoked for ${ip}`);
+            } catch (e) {
+                showToast("Error revoking rule.");
+            }
+        }
+
+        fetchRules();
+        setInterval(fetchRules, 5000);
+    </script>
+    <script src="/static/auth.js"></script>
+</body>
+</html>

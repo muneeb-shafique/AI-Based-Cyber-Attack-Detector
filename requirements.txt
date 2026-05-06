@@ -1,35 +1,32 @@
-# Core
+# ─── Core scientific stack ────────────────────────────────────────────────────
 pandas
 numpy
 scipy
 
-# Network Traffic Capture & Parsing
+# ─── Network Traffic Capture & Parsing ───────────────────────────────────────
 scapy
 dpkt
-pyshark
 
-# Machine Learning & Data Processing
+# ─── Machine Learning ─────────────────────────────────────────────────────────
 scikit-learn
 xgboost
 imbalanced-learn
-tensorflow
+joblib
+
+# ─── Deep Learning (Autoencoder) ──────────────────────────────────────────────
+tensorflow          # or: tensorflow-cpu  (if no GPU)
 keras
 
-# Dashboard & API
-Flask
-FastAPI
-uvicorn
-
-# Utilities
+# ─── Dashboard & API ──────────────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+psutil
 python-dotenv
-joblib
-colorama
 
-# LLM, Embedding & Vectorization
-langchain
-langchain-community
-openai
-google-generativeai
+# ─── LLM / RAG / Embeddings ───────────────────────────────────────────────────
 sentence-transformers
-chromadb
-faiss-cpu
+faiss-cpu           # swap for faiss-gpu on CUDA machines
+# transformers      # uncomment when using local Phi-4-mini-instruct RAG
+
+# ─── Optional extras ─────────────────────────────────────────────────────────
+colorama
